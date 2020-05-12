@@ -1,0 +1,109 @@
+{
+    "invoice\\bo\\Invoice": {
+        "id": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\scalar\\IntegerPropDef",
+            "props": {
+                "size": "32",
+                "signed": true
+            }
+        },
+        "title": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\scalar\\StringPropDef",
+            "props": {
+                "length": "255",
+                "charset": null
+            }
+        },
+        "invoiceNumber": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\scalar\\StringPropDef",
+            "props": {
+                "length": "255",
+                "charset": null
+            }
+        },
+        "invoiceDate": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\DateTimePropDef",
+            "props": {
+                "required": true
+            }
+        },
+        "status": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\scalar\\StringPropDef",
+            "props": {
+                "length": "255",
+                "charset": null
+            }
+        },
+        "numRemindings": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\scalar\\StringPropDef",
+            "props": {
+                "length": "255",
+                "charset": null
+            }
+        },
+        "lastReminded": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\DateTimePropDef",
+            "props": {
+                "required": false
+            }
+        },
+        "textHtml": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\scalar\\TextPropDef",
+            "props": {
+                "size": "524280",
+                "charset": null
+            }
+        },
+        "currency": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\scalar\\FixedPointPropDef",
+            "props": {
+                "num-decimal-digits": "2",
+                "num-integer-digits": "15"
+            }
+        },
+        "items": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\relation\\OneToManyPropDef",
+            "props": {
+                "targetEntityClass": "invoice\\bo\\InvoiceItem",
+                "mappedBy": "invoice",
+                "cascadeType": {
+                    "1": "1",
+                    "2": "2",
+                    "4": "4",
+                    "8": "8",
+                    "16": "16"
+                },
+                "fetchType": "lazy",
+                "orphanRemoval": false
+            }
+        },
+        "address": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\relation\\OneToOnePropDef",
+            "props": {
+                "targetEntityClass": "invoice\\bo\\InvoiceAddress",
+                "mappedBy": null,
+                "cascadeType": {
+                    "1": "1",
+                    "2": "2",
+                    "4": "4",
+                    "8": "8",
+                    "16": "16"
+                },
+                "fetchType": "lazy",
+                "orphanRemoval": false
+            }
+        },
+        "taxIncluded": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\scalar\\BooleanPropDef",
+            "props": {
+                "required": true
+            }
+        },
+        "n2nLocale": {
+            "prop-def": "n2n\\impl\\persistence\\orm\\property\\hangar\\N2nLocalePropDef",
+            "props": {
+                "required": true
+            }
+        }
+    }
+}

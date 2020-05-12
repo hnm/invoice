@@ -1,0 +1,124 @@
+{
+    "types": {
+        "invoice-invoice": {
+            "nature": "entity",
+            "entity": "invoice\\bo\\Invoice",
+            "dataSourceName": null,
+            "label": "Rechnung",
+            "pluralLabel": "Rechnungen",
+            "iconType": null,
+            "filterData": {
+                "useAnd": true,
+                "items": [],
+                "groups": []
+            },
+            "defaultSort": [],
+            "props": {
+                "title": {
+                    "class": "rocket\\impl\\ei\\component\\prop\\string\\StringEiProp",
+                    "props": {
+                        "displayInOverview": true,
+                        "displayInDetailView": true,
+                        "displayInEditView": true,
+                        "displayInAddView": true,
+                        "constant": false,
+                        "readOnly": false,
+                        "mandatory": false,
+                        "draftable": false,
+                        "maxlength": "255",
+                        "multiline": false
+                    },
+                    "label": "Title",
+                    "objectProperty": "title",
+                    "entityProperty": "title"
+                },
+                "invoiceNumber": {
+                    "class": "rocket\\impl\\ei\\component\\prop\\string\\StringEiProp",
+                    "props": {
+                        "displayInOverview": true,
+                        "displayInDetailView": true,
+                        "displayInEditView": true,
+                        "displayInAddView": true,
+                        "constant": false,
+                        "readOnly": false,
+                        "mandatory": false,
+                        "draftable": false,
+                        "maxlength": "255",
+                        "multiline": false
+                    },
+                    "label": "Invoice Number",
+                    "objectProperty": "invoiceNumber",
+                    "entityProperty": "invoiceNumber"
+                },
+                "invoiceDate": {
+                    "class": "rocket\\impl\\ei\\component\\prop\\date\\DateTimeEiProp",
+                    "props": {
+                        "displayInOverview": true,
+                        "displayInDetailView": true,
+                        "displayInEditView": true,
+                        "displayInAddView": true,
+                        "constant": false,
+                        "readOnly": false,
+                        "mandatory": true,
+                        "draftable": false,
+                        "dateStyle": "medium",
+                        "timeStyle": "none"
+                    },
+                    "label": "Invoice Date",
+                    "objectProperty": "invoiceDate",
+                    "entityProperty": "invoiceDate"
+                },
+                "status": {
+                    "class": "rocket\\impl\\ei\\component\\prop\\string\\StringEiProp",
+                    "props": {
+                        "displayInOverview": true,
+                        "displayInDetailView": true,
+                        "displayInEditView": true,
+                        "displayInAddView": true,
+                        "constant": false,
+                        "readOnly": false,
+                        "mandatory": false,
+                        "draftable": false,
+                        "maxlength": "255",
+                        "multiline": false
+                    },
+                    "label": "Status",
+                    "objectProperty": "status",
+                    "entityProperty": "status"
+                }
+            },
+            "commands": [],
+            "partialControlOrder": [],
+            "overallControlOrder": [],
+            "entryControlOrder": []
+        },
+        "invoice-invoice-item": {
+            "nature": "entity",
+            "entity": "invoice\\bo\\InvoiceItem",
+            "dataSourceName": null,
+            "label": "Invoice Item",
+            "pluralLabel": "Invoice Items",
+            "iconType": null,
+            "props": [],
+            "commands": [],
+            "partialControlOrder": [],
+            "overallControlOrder": [],
+            "entryControlOrder": []
+        },
+        "invoice-invoice-address": {
+            "nature": "entity",
+            "entity": "invoice\\bo\\InvoiceAddress",
+            "dataSourceName": null,
+            "label": "Invoice Address",
+            "pluralLabel": "Invoice Addresss",
+            "iconType": null,
+            "props": [],
+            "commands": [],
+            "partialControlOrder": [],
+            "overallControlOrder": [],
+            "entryControlOrder": []
+        }
+    },
+    "eiTypeExtensions": [],
+    "launchPads": []
+}

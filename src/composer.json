@@ -1,0 +1,29 @@
+{
+    "name": "hnm/event",
+    "type": "n2n-tmpl-module",
+    "description": "Default Content Items for n2n",
+    "keywords": ["n2n-tmpl-module", "n2n-module", "n2n"],
+    "homepage": "https://n2n.rocks/",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Thomas Günther",
+            "email": "guenther@hnm.ch"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "n2n/n2n-composer-module-installer": "dev-master",
+        "n2n/rocket": "dev-master",
+        "tecnickcom/tcpdf": "^6.3.0"
+    },
+    "require-dev": {
+        "n2n/hangar": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "slider\\": "src/app/invoice"
+        }
+    }
+}
