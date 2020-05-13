@@ -11,7 +11,7 @@ class InvoiceUtils {
 	
 	public static function getItemPrice(InvoiceableItem $invoicableItem, bool $taxIncluded = false) {
 		$cumulatedPrice = $invoicableItem->getUnitPrice() * $invoicableItem->getAmount();
-		if ($taxIncluded == $invoicableItem->getInvoice()->isTaxIncluded()) {
+		if ($taxIncluded == $invoicableItem->getInvoiceable()->isTaxIncluded()) {
 			return $cumulatedPrice;
 		}
 		

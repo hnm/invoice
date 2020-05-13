@@ -1,8 +1,7 @@
 <?php
-namespace inovice\bo;
+namespace invoice\bo;
 
 interface InvoiceableAddress {
-	public function getId();
 	public function getName();
 	public function getAddress1();
 	public function getAddress2();

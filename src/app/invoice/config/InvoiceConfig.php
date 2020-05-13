@@ -26,16 +26,11 @@ class InvoiceConfig implements RequestScoped {
 		return $this->httpContext->getAssetsUrl('invoice')->pathExt('logo.png');
 	}
 
-	public function getInvoicingPartyAddress1() {
-		return 'Fa. Fischers Fritzle';
-	}
-
-	public function getInvoicingPartyAddress2() {
-		return 'Witzlestr. 123';
-	}
-	
-	public function getInvoicingPartyAddress3() {
-		return '12345 Holeradio';
+	public function getInvoicingPartyAddress() {
+		return 'Fa. Fischers Fritzle
+				
+				Witzlestr. 123
+				12345 Holeradio';
 	}
 
 	/**

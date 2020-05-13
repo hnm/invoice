@@ -8,6 +8,7 @@ use n2n\l10n\DynamicTextCollection;
 use n2n\io\managed\img\ImageFile;
 use invoice\config\InvoiceConfig;
 use invoice\bo\Invoiceable;
+use n2n\impl\web\ui\view\html\HtmlUtils;
 
 class InvoicePdf extends \TCPDF {
 	
@@ -23,9 +24,8 @@ class InvoicePdf extends \TCPDF {
 	
 	private $invoiceable;
 	private $fileLogo;
-	private $invoicingPartyAddress1;
-	private $invoicingPartyAddress2;
-	private $invoicingPartyAddress3;
+	private $invoicingPartyAddress;
+	private $invoiceHeader;
 	private $dtc;
 	private $pageName;
 	private $headingAlignment = self::DEFAULT_ALIGNMENT;
@@ -36,17 +36,15 @@ class InvoicePdf extends \TCPDF {
 	private $customerAddressHeader;
 	
 	public function __construct(Invoiceable $invoiceable, $pageName, $taxNumber, DynamicTextCollection $dtc, 
-			File $fileLogo = null, $invoicingPartyAddress1 = null, $invoicingPartyAddress2 = null) {
+			File $fileLogo = null, string $invoicingPartyAddress = null) {
 		parent::__construct();
 		$this->invoiceable = $invoiceable;
 		$this->fileLogo = $fileLogo;
-		$this->invoicingPartyAddress1 = $invoicingPartyAddress1;
-		$this->invoicingPartyAddress2 = $invoicingPartyAddress2;
 		$this->pageName = $pageName;
 		$this->taxNumber = $taxNumber;
+		$this->invoicingPartyAddress = $invoicingPartyAddress;
 		$this->dtc = $dtc;
-		$locales = $this->dtc->getLocales();
-		$this->dateFormatter = DateTimeFormat::createDateInstance(reset($locales), self::DATE_STYLE);
+		$this->dateFormatter = DateTimeFormat::createDateInstance($invoiceable->getN2nLocale(), self::DATE_STYLE);
 	}
 	
 	public function setHeadingAlignment($headingAlignment) {
@@ -69,6 +67,10 @@ class InvoicePdf extends \TCPDF {
 			default:
 				throw new \InvalidArgumentException($headingAlignment . 'is not a valid heading Alignment');
 		}
+	}
+	
+	public function setInvoiceHeader(string $invoiceHeader) {
+		$this->invoiceHeader = $invoiceHeader;
 	}
 	
 	public function setHeadingOffset($headingOffset) {
@@ -128,17 +130,11 @@ class InvoicePdf extends \TCPDF {
 					'', '', '', true, 300, '', false, false, 0, $this->headingAlignment . 'M');
 			$this->SetY($this->y + $logoHeight + 5);
 		}
+		
 		$this->setDefaultFont();
-		if (null !== $this->invoicingPartyAddress1) {
-			$this->Cell(0, 6, $this->invoicingPartyAddress1, 0, 0, $this->headingAlignment);
-			$this->Ln();
-		}
-		if (null !== $this->invoicingPartyAddress2) {
-			$this->Cell(0, 6, $this->invoicingPartyAddress2, 0, 0, $this->headingAlignment);
-			$this->Ln();
-		}
-		if (null !== $this->invoicingPartyAddress3) {
-			$this->Cell(0, 6, $this->invoicingPartyAddress3, 0, 0, $this->headingAlignment);
+
+		if (null !== $this->invoiceHeader) {
+			$this->Cell(0, 6, $this->invoiceHeader, 0, 0, $this->headingAlignment);
 			$this->Ln();
 		}
 		
@@ -155,6 +151,18 @@ class InvoicePdf extends \TCPDF {
 		
 		$xPosition1Metas = 135;
 		$xPosition2Metas = 170;
+		
+		if (!empty($this->invoicingPartyAddress)) {
+			foreach (explode("\n", $this->invoicingPartyAddress) as $line) {
+				$this->SetX($xPosition1Metas);
+				if (!empty(trim($line))) {
+					$this->writeDefaultCell($line);
+				}
+				$this->Ln();
+			}
+			$this->Ln();
+		}
+		
 		$this->SetX($xPosition1Metas);
 		$this->writeDefaultCell($this->dtc->translate('pdf_invoice_number'));
 		$this->SetX($xPosition2Metas);
@@ -164,6 +172,8 @@ class InvoicePdf extends \TCPDF {
 		$this->writeDefaultCell($this->dtc->translate('pdf_invoice_date'));
 		$this->SetX($xPosition2Metas);
 		$this->writeDefaultCell($this->dateFormatter->format($this->invoiceable->getInvoiceDate()));
+		$this->Ln();
+		$maxY = $this->GetY();
 		
 		//print Invoice Address
 		$this->SetY($yStartPosition);
@@ -174,6 +184,7 @@ class InvoicePdf extends \TCPDF {
 			$this->Ln();
 			$this->setDefaultFont();
 		}
+		
 		if (null !== ($organisation = $address->getOrganisation())) {
 			$this->writeDefaultCell($organisation);
 			$this->Ln();
@@ -192,7 +203,11 @@ class InvoicePdf extends \TCPDF {
 			$this->writeDefaultCell($country);
 			$this->Ln();
 		}
-		$this->SetY($this->y + 15);
+		if ($this->GetY() > $maxY) {
+			$maxY = $this->GetY();
+		}
+		
+		$this->SetY($maxY + 15);
 		
 	}
 	
@@ -217,7 +232,7 @@ class InvoicePdf extends \TCPDF {
 		if (null != $invoicableItems = $this->invoiceable->getInvoiceableItems()) {
 			foreach ($invoicableItems as $invoicableItem) {
 				$this->printTableRow($widths, $tableBodyAlignments, [$invoicableItem->getText(), $invoicableItem->getAmount(), 
-						$this->formatPrice(InvoiceUtils::getItemPrice($invoicableItem)), 
+						$this->formatPrice($invoicableItem->getUnitPrice()), 
 						$this->formatPrice(InvoiceUtils::getItemPrice($invoicableItem, $this->invoiceable->isTaxIncluded()))]);
 			}
 		}
@@ -266,6 +281,8 @@ class InvoicePdf extends \TCPDF {
 	}
 	
 	private function printTableRow(array $widths, array $aligns, array $contents) {
+		$this->SetLineStyle(['width' => 0.1]);
+		
 		foreach ($contents as $i => $content) {
 			$h = $this->getNumLines($contents[0], $widths[0]) * self::DEFAULT_CELL_HEIGHT + 2;
 			if (($this->GetY() + $h) > 270) $this->AddPage();
@@ -299,6 +316,6 @@ class InvoicePdf extends \TCPDF {
 	}
 	
 	private function formatPrice($price){
-		return L10nUtils::formatCurrency($this->invoiceable->getLocale(), $price, $this->invoiceable->getCurrency());
+		return L10nUtils::formatCurrency($price, $this->invoiceable->getN2nLocale(), $this->invoiceable->getCurrency());
 	}
 }
